@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">DMSOne</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="default_username">lp50051</string>
+    <string name="text_hint_username">Tên đăng nhập</string>
+    <string name="text_hint_password">Mật khẩu</string>
+    <string name="btn_login">Đăng nhập</string>
+    <string name="warning_credentials">Dữ liệu đăng nhập không hợp lệ</string>
+
+
+    <string name="title_sale">Bán hàng</string>
+    <string name="action_confirm_order">Xác nhận đơn </string>hàng
+    <string name="action_return_product">Trả hàng</string>
+</resources>
