@@ -1,6 +1,7 @@
 package com.htsi.dmsone.data.repository;
 
 import com.htsi.dmsone.data.model.ReturnProductResponse;
+import com.htsi.dmsone.data.model.SearchOrderResponse;
 
 import retrofit2.Call;
 
@@ -13,4 +14,6 @@ import retrofit2.Call;
 public interface SaleRepository {
 
     Call<ReturnProductResponse> listReturnProduct(String fromDate, String toDate);
+
+    Call<SearchOrderResponse> searchOrder();
 }

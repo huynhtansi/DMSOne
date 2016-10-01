@@ -10,10 +10,17 @@
     <string name="text_hint_username">Tên đăng nhập</string>
     <string name="text_hint_password">Mật khẩu</string>
     <string name="btn_login">Đăng nhập</string>
-    <string name="warning_credentials">Dữ liệu đăng nhập không hợp lệ</string>
+    <string name="warning_invalid_credentials">Dữ liệu đăng nhập không hợp lệ</string>
+    <string name="warning_wrong_credentials">Sai tên đăng nhập hoặc mật khẩu</string>
+
+    // Mock data
+    <string name="provider">Công ty TNHH SXTM Lý Tài Phát</string>
+    <string name="staff_name">Nguyễn Phương</string>
 
 
     <string name="title_sale">Bán hàng</string>
-    <string name="action_confirm_order">Xác nhận đơn </string>hàng
+    <string name="action_confirm_order">Xác nhận đơn hàng</string>
     <string name="action_return_product">Trả hàng</string>
+
+    <string name="action_report">Báo cáo</string>
 </resources>

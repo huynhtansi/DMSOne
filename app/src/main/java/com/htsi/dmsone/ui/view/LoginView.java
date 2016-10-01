@@ -7,5 +7,5 @@ package com.htsi.dmsone.ui.view;
  */
 
 public interface LoginView extends BaseView {
-    void renderLoginView();
+    void performLoginSuccess();
 }

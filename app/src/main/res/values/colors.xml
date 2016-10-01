@@ -3,4 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="step_pager_previous_tab_color">@color/colorPrimary</color>
+    <color name="step_pager_selected_tab_color">@color/colorPrimaryDark</color>
+    <color name="step_pager_selected_last_tab_color">@color/colorAccent</color>
+    <color name="step_pager_next_tab_color">#10000000</color>
 </resources>

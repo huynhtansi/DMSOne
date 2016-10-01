@@ -15,6 +15,4 @@ public class LoginActivity extends BaseActivity {
     protected BaseFragment hostFragment() {
         return new LoginFragment();
     }
-
-
 }

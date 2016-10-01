@@ -25,6 +25,7 @@ ext {
     butterknifeLibVersion = '8.1.0'
     retrofitLibVersion = '2.1.0'
     daggerLibVersion = '2.7'
+    okHttpLibVersion = '3.4.1'
 }
 
 dependencies {
@@ -41,11 +42,13 @@ dependencies {
     // Butter Knife
     compile "com.jakewharton:butterknife:${butterknifeLibVersion}"
     apt "com.jakewharton:butterknife-compiler:${butterknifeLibVersion}"
-    // Retrofit
+    // HTTP
     compile "com.squareup.retrofit2:retrofit:${retrofitLibVersion}"
     compile "com.squareup.retrofit2:converter-gson:${retrofitLibVersion}"
-
+    compile "com.squareup.okhttp3:okhttp-urlconnection:${okHttpLibVersion}"
     // Dependence Injection
     compile "com.google.dagger:dagger:${daggerLibVersion}"
     apt "com.google.dagger:dagger-compiler:${daggerLibVersion}"
+    //Utilities
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 }

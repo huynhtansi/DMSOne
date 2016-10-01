@@ -2,7 +2,7 @@ package com.htsi.dmsone.presenter;
 
 import android.util.Log;
 
-import com.htsi.dmsone.data.model.ReturnProductResponse;
+import com.htsi.dmsone.data.model.SearchOrderResponse;
 import com.htsi.dmsone.data.repository.AuthenticationRepository;
 import com.htsi.dmsone.data.repository.SaleRepository;
 import com.htsi.dmsone.ui.view.LoginView;
@@ -38,21 +38,24 @@ public class LoginPresenter implements BasePresenter<LoginView> {
     }
 
     public void authenticate(String username, String password) {
+        mLoginView.showLoading();
         this.mAuthenticationRepository.authenticate(username, password).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.d("Response", "" + response.headers());
 
-                mSaleRepository.listReturnProduct("22/09/2016","22/09/2016").enqueue(new Callback<ReturnProductResponse>() {
+                mSaleRepository.searchOrder().enqueue(new Callback<SearchOrderResponse>() {
                     @Override
-                    public void onResponse(Call<ReturnProductResponse> call, Response<ReturnProductResponse> response) {
-                        Log.d("onResponse", response.body().token);
+                    public void onResponse(Call<SearchOrderResponse> call, Response<SearchOrderResponse> response) {
+                        mLoginView.hideLoading();
+                        mLoginView.performLoginSuccess();
+                        Log.d("onResponse", "Token = " + response.body().token);
                     }
 
                     @Override
-                    public void onFailure(Call<ReturnProductResponse> call, Throwable t) {
+                    public void onFailure(Call<SearchOrderResponse> call, Throwable t) {
                         Log.d("onFailure", t.getMessage());
-
+                        mLoginView.hideLoading();
+                        mLoginView.showRetry();
                     }
                 });
 

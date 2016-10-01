@@ -1,6 +1,7 @@
 package com.htsi.dmsone.data.service;
 
 import com.htsi.dmsone.data.model.ReturnProductResponse;
+import com.htsi.dmsone.data.model.SearchOrderResponse;
 
 import java.util.Map;
 
@@ -18,4 +19,7 @@ public interface SaleService {
 
     @GET("sale-product/return-product")
     Call<ReturnProductResponse> listReturnProduct(@QueryMap Map<String, String> options);
+
+    @GET("sale-product/confirm-order/searchOrder")
+    Call<SearchOrderResponse> searchOrder();
 }

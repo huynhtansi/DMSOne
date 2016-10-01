@@ -1,6 +1,7 @@
 package com.htsi.dmsone.data.repository;
 
 import com.htsi.dmsone.data.model.ReturnProductResponse;
+import com.htsi.dmsone.data.model.SearchOrderResponse;
 import com.htsi.dmsone.data.service.SaleService;
 
 import java.util.HashMap;
@@ -33,5 +34,10 @@ public class SaleRepositoryImp implements SaleRepository {
         options.put("flag", "false");
         //fromDate=22%2F09%2F2016&toDate=22%2F09%2F2016&orderTypeString=IN&saleOrderStatusString=1&saleOrderTypeString=1&flag=false
         return mSaleService.listReturnProduct(options);
+    }
+
+    @Override
+    public Call<SearchOrderResponse> searchOrder() {
+        return mSaleService.searchOrder();
     }
 }
