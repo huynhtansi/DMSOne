@@ -1,6 +1,8 @@
 package com.htsi.dmsone.data.repository;
 
+import com.htsi.dmsone.data.model.ExportFileResponse;
 import com.htsi.dmsone.data.model.Report;
+import com.htsi.dmsone.data.model.ShopProfileResponse;
 import com.htsi.dmsone.data.service.ReportService;
 
 import java.util.HashMap;
@@ -37,5 +39,25 @@ public class ReportRepositoryImp implements ReportRepository {
     @Override
     public Call<List<Report>> getReportList() {
         return mReportService.getReportList();
+    }
+
+    @Override
+    public Call<ResponseBody> getReportCode(String url) {
+        return mReportService.getReportCode(url);
+    }
+
+    @Override
+    public Call<List<ShopProfileResponse>> getShopProfile() {
+        return mReportService.getShopProfile();
+    }
+
+    @Override
+    public Call<ExportFileResponse> exportReportFile(String url) {
+        return mReportService.exportReportFile(url);
+    }
+
+    @Override
+    public Call<ResponseBody> downloadReport(String url) {
+        return mReportService.downloadReport(url);
     }
 }

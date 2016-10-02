@@ -23,4 +23,19 @@
     <string name="action_return_product">Trả hàng</string>
 
     <string name="action_report">Báo cáo</string>
+
+    <string name="title_from_date">Từ ngày</string>
+    <string name="title_to_date">Đến ngày</string>
+    <string name="title_seller">Nhân viên bán hàng</string>
+    <string name="title_shipper">Nhân viên giao hàng</string>
+    <string name="title_status">Trạng thái đã in</string>
+    <string name="title_order_number">Số đơn hàng</string>
+    <string name="title_printing_time">Tuỳ chọn thời gian in</string>
+    <string name="title_format_file">Kiểu file</string>
+    <string name="format_pdf">PDF</string>
+    <string name="format_xls">XLS</string>
+    <string name="title_button_export">Xuất báo cáo</string>
+
+    <string name="message_has_no_data">Không có dữ liệu</string>
+    <string name="message_in_progress">Đang xử lý dữ liệu&#8230;</string>
 </resources>

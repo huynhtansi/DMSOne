@@ -188,10 +188,6 @@ public class ReportFragment extends BaseFragment implements ReportView, ModelCal
 
         @Override
         public Fragment getItem(int position) {
-            if (position >= mCurrentPageSequence.size()) {
-                return new ReportOptionsFragment();
-            }
-
             return mCurrentPageSequence.get(position).createFragment();
         }
 

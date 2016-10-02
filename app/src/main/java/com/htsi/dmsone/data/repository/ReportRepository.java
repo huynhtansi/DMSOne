@@ -1,6 +1,8 @@
 package com.htsi.dmsone.data.repository;
 
+import com.htsi.dmsone.data.model.ExportFileResponse;
 import com.htsi.dmsone.data.model.Report;
+import com.htsi.dmsone.data.model.ShopProfileResponse;
 
 import java.util.List;
 
@@ -16,4 +18,12 @@ public interface ReportRepository {
     Call<ResponseBody> authenticate(String username, String password);
 
     Call<List<Report>> getReportList();
+
+    Call<ResponseBody> getReportCode(String url);
+
+    Call<List<ShopProfileResponse>> getShopProfile();
+
+    Call<ExportFileResponse> exportReportFile(String url);
+
+    Call<ResponseBody> downloadReport(String url);
 }

@@ -7,6 +7,7 @@ import com.htsi.dmsone.ui.activity.BaseActivity;
 import com.htsi.dmsone.ui.fragment.BaseFragment;
 import com.htsi.dmsone.ui.fragment.LoginFragment;
 import com.htsi.dmsone.ui.fragment.ReportFragment;
+import com.htsi.dmsone.ui.wizard.fragment.ExportReportFragment;
 
 import javax.inject.Singleton;
 
@@ -30,4 +31,5 @@ public interface AppComponent {
     void inject(LoginActivity pLoginActivity);
     void inject(LoginFragment pLoginFragment);
     void inject(ReportFragment pReportFragment);
+    void inject(ExportReportFragment pExportReportFragment);
 }
