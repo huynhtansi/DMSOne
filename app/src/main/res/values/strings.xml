@@ -28,7 +28,7 @@
     <string name="title_to_date">Đến ngày</string>
     <string name="title_seller">Nhân viên bán hàng</string>
     <string name="title_shipper">Nhân viên giao hàng</string>
-    <string name="title_status">Trạng thái đã in</string>
+    <string name="title_print_status">Trạng thái đã in</string>
     <string name="title_order_number">Số đơn hàng</string>
     <string name="title_printing_time">Tuỳ chọn thời gian in</string>
     <string name="title_format_file">Kiểu file</string>
@@ -37,5 +37,54 @@
     <string name="title_button_export">Xuất báo cáo</string>
 
     <string name="message_has_no_data">Không có dữ liệu</string>
+    <string name="message_failure_download">Tải thất bại</string>
     <string name="message_in_progress">Đang xử lý dữ liệu&#8230;</string>
+    <string name="message_success_download">Tải thành công. Mở tập tin?</string>
+    <string name="title_open">Mở</string>
+
+    <string name="title_OK">Chọn</string>
+    <string name="empty_string">&#8230;</string>
+
+    <string name="title_status">Trạng thái</string>
+    <string-array name="array_status">
+        <item>Tất cả</item>
+        <item>Chưa đặt</item>
+        <item>Đã dặt hàng</item>
+        <item>Đã huỷ</item>
+        <item>Từ chối</item>
+    </string-array>
+
+    <string name="format_customer_name">Khách hàng: <b>%1$s - %2$s</b></string>
+    <string name="format_customer_address">Địa chỉ: %s</string>
+    <string name="format_seller">Nhân viên bán hàng: %s</string>
+    <string name="format_shipper">Nhân viên giao hàng: %s</string>
+    <string name="format_total">Tổng: %s</string>
+
+    <string name="format_product_name">Tên sản phẩm: %s</string>
+    <string name="format_price">Đơn giá: %d</string>
+    <string name="format_ware_house">Kho: %s</string>
+    <string name="format_quantity">Số lượng: %d</string>
+    <string name="format_promo_code">CT Khuyến mãi: %s</string>
+
+    <string name="transition_order">ShowOrder</string>
+
+    <string name="edit_return_product_reason">Lý do trả hàng</string>
+    <string name="title_button_submit">Xác nhận</string>
+    <string-array name="return_product_reasons">
+        <item>NVBH lập sai SL, chủng loại SP</item>
+        <item >NVBH lập sai, KM tay</item>
+        <item>NV kế toán cập nhật, xử lý sai đơn hàng</item>
+        <item>NVGH giao không được do xe hỏng, trễ giờ…(do chủ quan)</item>
+        <item>NVGH giao không do CH đóng cửa/chủ đi vắng (do Khách quan)</item>
+        <item >KH đề nghị trả lại do lý do khác (giá/ CTKM/ thiếu tiền…)</item>
+        <item>NPP yêu cầu trả lại</item>
+        <item>Công ty yêu cầu thu hồi (Theo thủ tục thu hồi sản phẩm)</item>
+        <item>Lý do khác (ngoài các lý do trên, cụ thể ghi trong phần thuyết minh)</item>
+        <item>KH để nghị trả lại do hàng hư hỏng (phồng xì, bẹp méo…)</item>
+    </string-array>
+
+    <string name="message_confirm_return_order">Xác nhận trả đơn hàng này?</string>
+    <string name="btn_ok_title">Xác nhận</string>
+    <string name="btn_cancel_title">Huỷ</string>
+
 </resources>

@@ -45,6 +45,7 @@ public class SingleFixedChoicePage extends Page {
         return mChoices.get(position);
     }
 
+
     public int getOptionCount() {
         return mChoices.size();
     }

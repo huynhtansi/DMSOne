@@ -2,6 +2,8 @@ package com.htsi.dmsone.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by htsi.
  * Since: 9/22/16 on 5:42 PM
@@ -21,4 +23,7 @@ public class ReturnProductResponse {
 
     @SerializedName("errMsg")
     public String error;
+
+    @SerializedName("rows")
+    public List<Order> orderList;
 }

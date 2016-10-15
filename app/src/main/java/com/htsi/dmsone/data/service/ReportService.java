@@ -3,6 +3,7 @@ package com.htsi.dmsone.data.service;
 import com.htsi.dmsone.data.model.ExportFileResponse;
 import com.htsi.dmsone.data.model.MapControlResponse;
 import com.htsi.dmsone.data.model.Report;
+import com.htsi.dmsone.data.model.StaffResponse;
 import com.htsi.dmsone.data.model.ShopProfileResponse;
 
 import java.util.List;
@@ -43,4 +44,7 @@ public interface ReportService {
 
     @POST
     Call<MapControlResponse> getMapControl();
+
+    @POST("/commons/search-staff-show-list")
+    Call<StaffResponse> getSellerList(@QueryMap Map<String, Integer> options);
 }

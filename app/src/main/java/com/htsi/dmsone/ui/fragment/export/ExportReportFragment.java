@@ -1,47 +1,50 @@
-package com.htsi.dmsone.ui.wizard.fragment;
+package com.htsi.dmsone.ui.fragment.export;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Environment;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.htsi.dmsone.R;
 import com.htsi.dmsone.data.model.Report;
+import com.htsi.dmsone.data.model.ShopProfileResponse;
+import com.htsi.dmsone.data.model.Staff;
 import com.htsi.dmsone.di.component.AppComponent;
 import com.htsi.dmsone.presenter.ExportReportPresenter;
 import com.htsi.dmsone.ui.fragment.BaseFragment;
 import com.htsi.dmsone.ui.view.ExportReportView;
 import com.htsi.dmsone.ui.wizard.ExportReportPage;
 import com.htsi.dmsone.ui.wizard.Page;
+import com.htsi.dmsone.ui.wizard.fragment.PageFragmentCallbacks;
+import com.htsi.dmsone.utils.Utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
+
+import static com.htsi.dmsone.utils.Utils.getTokenReportCode;
+import static com.htsi.dmsone.utils.Utils.openFile;
+import static com.htsi.dmsone.utils.Utils.writeResponseBodyToDisk;
 
 /**
  * Created by htsi.
@@ -54,22 +57,33 @@ public class ExportReportFragment extends BaseFragment implements ExportReportVi
     private static final String ARG_KEY = "key";
 
     private PageFragmentCallbacks mCallbacks;
-    private Page mPage;
-    private String mKey;
 
     private Report mReport;
-
+    private Page mPage;
     private int mShopId;
+
     private boolean mIsPrinted;
     private String mFormatFile = "XLS";
     private long mReportCode;
     private String mTokenString;
+    private CharSequence[] mSelectedSellerCode;
+    private CharSequence[] mSelectedShipperCode;
+
 
     @Inject
     ExportReportPresenter mPresenter;
 
+    @BindView(R.id.reportOptionLayout)
+    View mReportOptionLayout;
+
+    @BindView(android.R.id.title)
+    TextView mTitle;
+
+    @BindView(R.id.editOrderNumber)
+    EditText mEditOrderNumber;
+
     @BindView(R.id.textFromDate)
-    TextView mTextFromdate;
+    TextView mTextFromDate;
 
     @BindView(R.id.textToDate)
     TextView mTextToDate;
@@ -95,6 +109,7 @@ public class ExportReportFragment extends BaseFragment implements ExportReportVi
         Bundle args = new Bundle();
         args.putString(ARG_KEY, key);
 
+
         ExportReportFragment fragment = new ExportReportFragment();
         fragment.setArguments(args);
         return fragment;
@@ -109,9 +124,8 @@ public class ExportReportFragment extends BaseFragment implements ExportReportVi
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
-        mKey = args.getString(ARG_KEY);
-        mPage = mCallbacks.onGetPage(mKey);
-
+        String key = args.getString(ARG_KEY);
+        mPage = mCallbacks.onGetPage(key);
         ExportReportPage exportReportPage = (ExportReportPage) mPage;
         mReport = exportReportPage.getReport();
     }
@@ -126,17 +140,12 @@ public class ExportReportFragment extends BaseFragment implements ExportReportVi
         mPbLoading.setCancelable(false);
         mPbLoading.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
-        return inflater.inflate(R.layout.fragment_report_options, container, false);
+        return inflater.inflate(R.layout.fragment_export_product_by_shipper, container, false);
     }
 
     @Override
     public void onAttach(Context pContext) {
         super.onAttach(pContext);
-
-        /*if (!(pContext instanceof PageFragmentCallbacks)) {
-            throw new ClassCastException("Activity must implement PageFragmentCallbacks");
-        }*/
-
         mCallbacks = (PageFragmentCallbacks) getParentFragment();
     }
 
@@ -147,8 +156,8 @@ public class ExportReportFragment extends BaseFragment implements ExportReportVi
     }
 
     @Override
-    protected void onScreenVisible() {
-        super.onScreenVisible();
+    protected void onScreenVisible(View pView, Bundle savedInstanceState) {
+        super.onScreenVisible(pView, savedInstanceState);
 
         getComponent(AppComponent.class).inject(this);
         mPresenter.setView(this);
@@ -160,25 +169,27 @@ public class ExportReportFragment extends BaseFragment implements ExportReportVi
 
     private void setupUI() {
 
+        mTitle.setText(mPage.getTitle());
+
         Date date = new Date(System.currentTimeMillis());
         CharSequence currentDateString = DateFormat.format("dd/MM/yyyy", date);
 
-        mTextFromdate.setText(currentDateString);
+        mTextFromDate.setText(currentDateString);
         mTextToDate.setText(currentDateString);
 
 
-        mTextFromdate.setOnClickListener(new View.OnClickListener() {
+        mTextFromDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pView) {
                 Calendar calendar = Calendar.getInstance();
 
-                DatePickerDialog dialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog dialog = new DatePickerDialog(getContext(), R.style.CalendarDialogStyle,new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker pDatePicker, int pI, int pI1, int pI2) {
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(pI, pI1, pI2);
                         Date fromDate = new Date(calendar.getTimeInMillis());
-                        mTextFromdate.setText(DateFormat.format("dd/MM/yyyy", fromDate));
+                        mTextFromDate.setText(DateFormat.format("dd/MM/yyyy", fromDate));
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
@@ -191,7 +202,7 @@ public class ExportReportFragment extends BaseFragment implements ExportReportVi
             public void onClick(View pView) {
                 Calendar calendar = Calendar.getInstance();
 
-                DatePickerDialog dialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog dialog = new DatePickerDialog(getContext(),R.style.CalendarDialogStyle, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker pDatePicker, int pI, int pI1, int pI2) {
                         Calendar calendar = Calendar.getInstance();
@@ -218,6 +229,20 @@ public class ExportReportFragment extends BaseFragment implements ExportReportVi
                 mIsPrinted = pB;
             }
         });
+
+        mTextSeller.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View pView) {
+                mPresenter.showStaffList(mShopId, 1012);
+            }
+        });
+
+        mTextShipper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View pView) {
+                mPresenter.showStaffList(mShopId, 4);
+            }
+        });
     }
 
     @OnClick(R.id.btnExport)
@@ -232,7 +257,7 @@ public class ExportReportFragment extends BaseFragment implements ExportReportVi
                 "/export?shopId=" + mShopId +
                 "&staffSaleCode=&deliveryCode=" +
                 "&isPrint=" + (mIsPrinted? 1:0) +
-                "&fromDate=" + mTextFromdate.getText() +
+                "&fromDate=" + mTextFromDate.getText() +
                 "&toDate=" + mTextToDate.getText() +
                 "&lstSaleOderNumberStr=" +
                 "&formatType=" + mFormatFile +
@@ -245,52 +270,104 @@ public class ExportReportFragment extends BaseFragment implements ExportReportVi
 
     @Override
     public void renderReportBody(ResponseBody pResponseBody) {
-
-        try {
-            String content = pResponseBody.string();
-
-
-            String[] lines = content.split(System.getProperty("line.separator"));
-
-
-
-            String codeString = getValueInTag(lines[8]);
-            mTokenString = getValueInTag(lines[10]);
-
-            mReportCode = Long.parseLong(codeString);
-
-            Log.d("TEST", mTokenString + " " + mReportCode);
-
-        } catch (IOException pE) {
-            pE.printStackTrace();
+        String[] lines = getTokenReportCode(pResponseBody);
+        if (lines != null) {
+            mReportCode = Long.parseLong(lines[0]);
+            mTokenString = lines[1];
+            mPresenter.getShopProfile();
         }
-
-        mPresenter.getShopProfile();
     }
 
     @Override
     public void showHasData(boolean hasData) {
-        Toast.makeText(getContext(), R.string.message_has_no_data, Toast.LENGTH_LONG).show();
+        Snackbar.make(mReportOptionLayout, R.string.message_has_no_data, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
-    public void returnShopId(int pShopId) {
-        mShopId = pShopId;
+    public void returnShopProfile(ShopProfileResponse pShopProfileResponse) {
+        mShopId = pShopProfileResponse.id;
     }
 
     @Override
     public void downloadReport(String path) {
-        Log.d("DownloadReport", path);
         mPresenter.downloadReport(path+"?v="+mTokenString);
     }
 
     @Override
     public void writeReportToDisk(ResponseBody pResponseBody, String path) {
         String fileName = path.substring(path.lastIndexOf('/'), path.indexOf("?v="));
-        String fullPath = writeResponseBodyToDisk(pResponseBody, fileName);
-        if (fullPath != null) {
-            openFile(fullPath);
+        final String fullPath = writeResponseBodyToDisk(pResponseBody, fileName);
+        if (fullPath != null)
+            Snackbar.make(mReportOptionLayout, R.string.message_success_download, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.title_open, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            openFile(getContext(), fullPath, mFormatFile);
+                        }
+                    })
+                    .show();
+    }
+
+    @Override
+    public void showStaffList(final List<Staff> pStaffList, final int objectType) {
+
+        final boolean[] isCheckedList = new boolean[pStaffList.size()];
+
+        if (objectType == 1012) {
+            if (mSelectedSellerCode == null)
+                mSelectedSellerCode = new CharSequence[pStaffList.size()];
+            else
+                for (int i = 0; i < isCheckedList.length; i++) {
+                    if (!TextUtils.isEmpty(mSelectedSellerCode[i]))
+                        isCheckedList[i] = true;
+                }
+        } else {
+            if (mSelectedShipperCode == null)
+                mSelectedShipperCode = new CharSequence[pStaffList.size()];
+            else
+                for (int i=0; i<isCheckedList.length; i++) {
+                    if (!TextUtils.isEmpty(mSelectedShipperCode[i]))
+                        isCheckedList[i] = true;
+                }
         }
+
+        CharSequence[] names = new CharSequence[pStaffList.size()];
+        for (int i = 0; i< pStaffList.size(); i++) {
+            names[i] = pStaffList.get(i).name;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMultiChoiceItems(names, isCheckedList, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface pDialogInterface, int pI, boolean pB) {
+                isCheckedList[pI] = pB;
+            }
+        });
+        builder.setTitle(objectType==1012? R.string.title_seller:R.string.title_shipper);
+        builder.setPositiveButton(R.string.title_OK, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface pDialogInterface, int pI) {
+                if (objectType == 1012) {
+                    for (int i=0; i<isCheckedList.length; i++) {
+                        if (isCheckedList[i])
+                            mSelectedSellerCode[i] = pStaffList.get(i).code;
+                        else
+                            mSelectedSellerCode[i] = "";
+                    }
+                    String codes = Utils.join(mSelectedSellerCode);
+                    mTextSeller.setText(TextUtils.isEmpty(codes)?getString(R.string.empty_string):codes);
+                } else {
+                    for (int i=0; i<isCheckedList.length; i++) {
+                        if (isCheckedList[i])
+                            mSelectedShipperCode[i] = pStaffList.get(i).code;
+                        else
+                            mSelectedShipperCode[i] = "";
+                    }
+                    String codes = Utils.join(mSelectedShipperCode);
+                    mTextShipper.setText(TextUtils.isEmpty(codes)?getString(R.string.empty_string):codes);
+                }
+            }
+        });
+        builder.create().show();
     }
 
     @Override
@@ -305,105 +382,11 @@ public class ExportReportFragment extends BaseFragment implements ExportReportVi
 
     @Override
     public void showRetry() {
-
+        Snackbar.make(mReportOptionLayout, R.string.message_failure_download, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void hideRetry() {
 
     }
-
-    public String writeResponseBodyToDisk(ResponseBody body, String filename) {
-        try {
-            File dir = new File(Environment.getExternalStorageDirectory(), "DMSOneExport");
-
-            if (!dir.exists())
-                dir.mkdir();
-
-            File futureStudioIconFile = new File(dir + File.separator + filename);
-
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
-
-            try {
-                byte[] fileReader = new byte[4096];
-
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
-
-                inputStream = body.byteStream();
-                outputStream = new FileOutputStream(futureStudioIconFile);
-
-                while (true) {
-                    int read = inputStream.read(fileReader);
-
-                    if (read == -1) {
-                        break;
-                    }
-
-                    outputStream.write(fileReader, 0, read);
-
-                    fileSizeDownloaded += read;
-
-                    Log.d("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
-                }
-
-                outputStream.flush();
-
-                return futureStudioIconFile.getAbsolutePath();
-            } catch (IOException e) {
-                return null;
-            } finally {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-            }
-        } catch (IOException e) {
-            return null;
-        }
-    }
-
-    private String getValueInTag(String tag) {
-        int startIndex = tag.indexOf("value=\"");
-        int endIndex = tag.indexOf("/>");
-
-        String temp = tag.substring(startIndex, endIndex);
-        return temp.substring(7, temp.length() - 2);
-    }
-
-    private void openFile(String path) {
-        String mineType = mFormatFile.equals("PDF")? "application/pdf":"application/vnd.ms-excel";
-        Intent newIntent = new Intent(Intent.ACTION_VIEW);
-        newIntent.setDataAndType(Uri.fromFile(new File(path)), mineType);
-        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        try {
-            getContext().startActivity(newIntent);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(getContext(), "No handler for this type of file.", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private String fileExt(String url) {
-        if (url.contains("?")) {
-            url = url.substring(0, url.indexOf("?"));
-        }
-        if (url.lastIndexOf(".") == -1) {
-            return null;
-        } else {
-            String ext = url.substring(url.lastIndexOf(".") + 1);
-            if (ext.contains("%")) {
-                ext = ext.substring(0, ext.indexOf("%"));
-            }
-            if (ext.contains("/")) {
-                ext = ext.substring(0, ext.indexOf("/"));
-            }
-            return ext.toLowerCase();
-
-        }
-    }
-
 }

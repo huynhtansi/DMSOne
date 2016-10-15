@@ -4,7 +4,8 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import com.htsi.dmsone.data.model.Report;
-import com.htsi.dmsone.ui.wizard.fragment.ExportReportFragment;
+import com.htsi.dmsone.ui.fragment.export.ExportReportFragment;
+import com.htsi.dmsone.ui.fragment.export.OrderTicketVNMExportFragment;
 
 import java.util.ArrayList;
 
@@ -16,23 +17,18 @@ import java.util.ArrayList;
 
 public class ExportReportPage extends Page {
 
-    protected ArrayList<String> mChoices = new ArrayList<String>();
+    protected ArrayList<String> mChoices = new ArrayList<>();
 
-    public ExportReportPage(ModelCallbacks callbacks, String title, Report pReport) {
+    ExportReportPage(ModelCallbacks callbacks, String title, Report pReport) {
         super(callbacks, title, pReport);
     }
 
     @Override
     public Fragment createFragment() {
+        if (mReport.attr.id.equals("RPT_NPP_7_3_8")) {
+            return OrderTicketVNMExportFragment.create(getKey());
+        }
         return ExportReportFragment.create(getKey());
-    }
-
-    public String getOptionAt(int position) {
-        return mChoices.get(position);
-    }
-
-    public int getOptionCount() {
-        return mChoices.size();
     }
 
     @Override

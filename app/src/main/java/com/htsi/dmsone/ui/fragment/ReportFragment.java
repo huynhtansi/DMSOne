@@ -60,8 +60,8 @@ public class ReportFragment extends BaseFragment implements ReportView, ModelCal
     }
 
     @Override
-    protected void onScreenVisible() {
-        super.onScreenVisible();
+    protected void onScreenVisible(View pView, Bundle savedInstanceState) {
+        super.onScreenVisible(pView, savedInstanceState);
 
         getComponent(AppComponent.class).inject(this);
         mReportPresenter.setView(this);
@@ -182,7 +182,7 @@ public class ReportFragment extends BaseFragment implements ReportView, ModelCal
         private int mCutOffPage;
         private Fragment mPrimaryFragment;
 
-        public StepPagerAdapter(FragmentManager pManager) {
+        StepPagerAdapter(FragmentManager pManager) {
             super(pManager);
         }
 
@@ -215,14 +215,14 @@ public class ReportFragment extends BaseFragment implements ReportView, ModelCal
             return POSITION_NONE;
         }
 
-        public void setCutOffPage(int cutOffPage) {
+        void setCutOffPage(int cutOffPage) {
             if (cutOffPage < 0) {
                 cutOffPage = Integer.MAX_VALUE;
             }
             mCutOffPage = cutOffPage;
         }
 
-        public int getCutOffPage() {
+        int getCutOffPage() {
             return mCutOffPage;
         }
 

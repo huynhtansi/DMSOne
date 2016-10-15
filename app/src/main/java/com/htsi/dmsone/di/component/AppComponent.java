@@ -1,13 +1,16 @@
 package com.htsi.dmsone.di.component;
 
 import com.htsi.dmsone.app.Runtime;
-import com.htsi.dmsone.ui.activity.LoginActivity;
 import com.htsi.dmsone.di.module.AppModule;
 import com.htsi.dmsone.ui.activity.BaseActivity;
+import com.htsi.dmsone.ui.activity.LoginActivity;
 import com.htsi.dmsone.ui.fragment.BaseFragment;
 import com.htsi.dmsone.ui.fragment.LoginFragment;
+import com.htsi.dmsone.ui.fragment.OrderDetailFragment;
 import com.htsi.dmsone.ui.fragment.ReportFragment;
-import com.htsi.dmsone.ui.wizard.fragment.ExportReportFragment;
+import com.htsi.dmsone.ui.fragment.ReturnProductFragment;
+import com.htsi.dmsone.ui.fragment.export.ExportReportFragment;
+import com.htsi.dmsone.ui.fragment.export.OrderTicketVNMExportFragment;
 
 import javax.inject.Singleton;
 
@@ -32,4 +35,7 @@ public interface AppComponent {
     void inject(LoginFragment pLoginFragment);
     void inject(ReportFragment pReportFragment);
     void inject(ExportReportFragment pExportReportFragment);
+    void inject(ReturnProductFragment pReturnProductFragment);
+    void inject(OrderTicketVNMExportFragment pOrderTicketVNMExportFragment);
+    void inject(OrderDetailFragment pOrderDetailFragment);
 }

@@ -2,6 +2,7 @@ package com.htsi.dmsone.data.repository;
 
 import com.htsi.dmsone.data.model.ExportFileResponse;
 import com.htsi.dmsone.data.model.Report;
+import com.htsi.dmsone.data.model.StaffResponse;
 import com.htsi.dmsone.data.model.ShopProfileResponse;
 import com.htsi.dmsone.data.service.ReportService;
 
@@ -13,7 +14,9 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 /**
- * Created by Huỳnh Phúc on 9/25/2016.
+ * Created by Huỳnh Phúc.
+ * Since: 9/25/2016 on 11:20 PM
+ * Project: DMSOne
  */
 
 public class ReportRepositoryImp implements ReportRepository {
@@ -59,5 +62,16 @@ public class ReportRepositoryImp implements ReportRepository {
     @Override
     public Call<ResponseBody> downloadReport(String url) {
         return mReportService.downloadReport(url);
+    }
+
+    @Override
+    public Call<StaffResponse> getStaffList(int shopId, int objectType) {
+        Map<String, Integer> options = new HashMap<>();
+        options.put("page", 1);
+        options.put("rows", 10);
+        options.put("shopId", shopId);
+        options.put("objectType", objectType);
+        options.put("status", 1);
+        return mReportService.getSellerList(options);
     }
 }

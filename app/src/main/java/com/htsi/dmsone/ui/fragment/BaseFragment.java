@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
 
 public class BaseFragment extends Fragment {
 
-    protected void onScreenVisible(){}
+    protected void onScreenVisible(View view, Bundle savedInstanceState){}
 
     protected <C> C getComponent(Class<C> componentType) {
         return componentType.cast(((HasComponent<C>) getActivity()).getComponent());
@@ -26,6 +26,6 @@ public class BaseFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        onScreenVisible();
+        onScreenVisible(view, savedInstanceState);
     }
 }

@@ -1,5 +1,10 @@
 package com.htsi.dmsone.ui.view;
 
+import com.htsi.dmsone.data.model.Staff;
+import com.htsi.dmsone.data.model.ShopProfileResponse;
+
+import java.util.List;
+
 import okhttp3.ResponseBody;
 
 /**
@@ -10,8 +15,9 @@ import okhttp3.ResponseBody;
 
 public interface ExportReportView extends BaseView {
     void renderReportBody(ResponseBody pResponseBody);
-    void returnShopId(int pShopId);
+    void returnShopProfile(ShopProfileResponse pShopProfileResponse);
     void downloadReport(String path);
     void writeReportToDisk(ResponseBody pResponseBody, String path);
     void showHasData(boolean hasData);
+    void showStaffList(List<Staff> pStaffList, int objectType);
 }

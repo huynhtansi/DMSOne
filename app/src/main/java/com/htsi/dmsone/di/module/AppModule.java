@@ -3,6 +3,8 @@ package com.htsi.dmsone.di.module;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.htsi.dmsone.R;
 import com.htsi.dmsone.app.DMSOneApplication;
 import com.htsi.dmsone.app.Runtime;
@@ -84,6 +86,9 @@ public class AppModule {
     @Singleton
     @Named("REST_ADAPTER")
     Retrofit provideRestAdapter() {
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                .create();
         CookieManager cookieManager = new CookieManager();
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
         OkHttpClient client = new OkHttpClient.Builder()
@@ -92,7 +97,7 @@ public class AppModule {
 
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.client(client)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl("http://203.190.162.25:8100/");
         return builder.build();
     }

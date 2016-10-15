@@ -73,7 +73,7 @@ public class BranchPage extends SingleFixedChoicePage {
         return this;
     }
     
-    public BranchPage addBranch(String choice) {
+    public BranchPage addBranch(String key, String choice) {
         mBranches.add(new Branch(choice, new PageList()));
         return this;
     }

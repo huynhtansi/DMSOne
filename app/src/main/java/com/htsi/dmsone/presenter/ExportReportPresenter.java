@@ -3,6 +3,7 @@ package com.htsi.dmsone.presenter;
 import android.util.Log;
 
 import com.htsi.dmsone.data.model.ExportFileResponse;
+import com.htsi.dmsone.data.model.StaffResponse;
 import com.htsi.dmsone.data.model.ShopProfileResponse;
 import com.htsi.dmsone.data.repository.ReportRepository;
 import com.htsi.dmsone.ui.view.ExportReportView;
@@ -29,7 +30,7 @@ public class ExportReportPresenter implements BasePresenter<ExportReportView> {
     private ReportRepository mReportRepository;
 
     @Inject
-    public ExportReportPresenter(ReportRepository pReportRepository) {
+    ExportReportPresenter(ReportRepository pReportRepository) {
         mReportRepository = pReportRepository;
     }
 
@@ -56,7 +57,7 @@ public class ExportReportPresenter implements BasePresenter<ExportReportView> {
         mReportRepository.getShopProfile().enqueue(new Callback<List<ShopProfileResponse>>() {
             @Override
             public void onResponse(Call<List<ShopProfileResponse>> call, Response<List<ShopProfileResponse>> response) {
-                mExportReportView.returnShopId(response.body().get(0).id);
+                mExportReportView.returnShopProfile(response.body().get(0));
             }
 
             @Override
@@ -93,12 +94,29 @@ public class ExportReportPresenter implements BasePresenter<ExportReportView> {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.body() != null)
                     mExportReportView.writeReportToDisk(response.body(), url);
+                else
+                    mExportReportView.showRetry();
                 mExportReportView.hideLoading();
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 mExportReportView.hideLoading();
+            }
+        });
+    }
+
+    public void showStaffList(int shopId, final int objectType) {
+        mReportRepository.getStaffList(shopId, objectType).enqueue(new Callback<StaffResponse>() {
+            @Override
+            public void onResponse(Call<StaffResponse> call, Response<StaffResponse> response) {
+                if (response.body() != null)
+                    mExportReportView.showStaffList(response.body().mStaffList, objectType);
+            }
+
+            @Override
+            public void onFailure(Call<StaffResponse> call, Throwable t) {
+
             }
         });
     }

@@ -13,10 +13,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.htsi.dmsone.R;
+import com.htsi.dmsone.app.DMSOneApplication;
 import com.htsi.dmsone.di.component.AppComponent;
 import com.htsi.dmsone.presenter.LoginPresenter;
 import com.htsi.dmsone.ui.activity.MainActivity;
 import com.htsi.dmsone.ui.view.LoginView;
+import com.htsi.dmsone.utils.ObscuredSharedPreferences;
 
 import javax.inject.Inject;
 
@@ -69,8 +71,8 @@ public class LoginFragment extends BaseFragment implements LoginView {
     }
 
     @Override
-    protected void onScreenVisible() {
-        super.onScreenVisible();
+    protected void onScreenVisible(View pView, Bundle savedInstanceState) {
+        super.onScreenVisible(pView, savedInstanceState);
 
         this.getComponent(AppComponent.class).inject(this);
         this.mLoginPresenter.setView(this);
@@ -80,6 +82,13 @@ public class LoginFragment extends BaseFragment implements LoginView {
 
     @Override
     public void performLoginSuccess() {
+
+        ObscuredSharedPreferences preferences = ((DMSOneApplication)getContext().getApplicationContext()).getAppComponent().runtime().getSharedPreferences();
+        ObscuredSharedPreferences.Editor editor = preferences.edit();
+        editor.putString("Username", editUsername.getText().toString());
+        editor.putString("Password", editPassword.getText().toString());
+        editor.apply();
+
         this.startActivity(new Intent(getContext(), MainActivity.class));
     }
 

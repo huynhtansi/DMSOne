@@ -34,7 +34,7 @@ public class ReportWizardModel extends AbstractWizardModel {
     private void createBranchPage(Report pReport, BranchPage main) {
         for (Report report:pReport.child) {
             if (report.attr.url != null) {
-                main.addBranch(report.name, new ExportReportPage(this, "Export", report));
+                main.addBranch(report.name, new ExportReportPage(this, report.name, report));
             } else {
                 BranchPage child = new BranchPage(this, report.name, report);
                 String[] choices = new String[report.child.size()];
